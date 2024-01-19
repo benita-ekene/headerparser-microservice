@@ -16,6 +16,32 @@ app.use(express.json());
 var cors = require('cors');
 app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 204
 
+
+app.use((req, res, next) => {
+  // Assuming you want to extract language, software, and IP from request headers
+  req.language = req.headers['accept-language'];
+  req.software = req.headers['user-agent'];
+  req.ip = req.ip || req.connection.remoteAddress;
+
+  next();
+});
+
+app.get("/", (req, res) => {
+  let { language, software, ip } = req;
+  
+  if (!language) {
+    return res.json({ error: "Language not found" });
+  }
+
+  // Assuming you want to send the extracted information as JSON
+  res.json({
+    language,
+    software,
+    ip
+  });
+});
+
+
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
