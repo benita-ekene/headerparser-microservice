@@ -26,20 +26,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
+app.get("/api/whoami", (req, res) => {
   let { language, software, ip } = req;
-  
-  if (!language) {
-    return res.json({ error: "Language not found" });
+
+  if (!language || !software || !ip) {
+    return res.json({ error: "Language, software, or IP not found" });
   }
 
   // Assuming you want to send the extracted information as JSON
   res.json({
     language,
     software,
-    ip
+    ipaddress: ip
   });
 });
+
 
 
 // http://expressjs.com/en/starter/basic-routing.html
